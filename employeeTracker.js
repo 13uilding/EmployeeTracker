@@ -1,10 +1,11 @@
 const mysql = require("mysql");
 // const questions = require("./javascript/questionnaire/questions");
-const Add = require("./javascript/classes/add");
+const Department = require("./javascript/classes/department");
 // const Remove = require("./javascript/classes/remove");
 // const View = require("./javascript/classes/view");
 // const Update = require("./javascript/classes/update");
 const inquirer = require("inquirer");
+
 
 const doQs = [
     "View All Employees", "View Employees By Department", "View Employees by Manager",
@@ -26,8 +27,10 @@ var connection = mysql.createConnection({
     database: "company_db"
 })
 
+
 connection.connect(function(err) {
     if (err) throw err;
+    // let department = new Department(connection);
     doWhat();
 })
 
@@ -42,13 +45,19 @@ function doWhat() {
         switch (answers.do) {
             case "Add Department":
                 let name = await departmentInquirer();
-                let department = new Add.department(name);
-                department.addMySQL(connection);
+                department = new Department(connection, name);
+                department.addMySQL();
+                doWhat();
+                break;
+            case "View All Departments":
+                department = new Department(connection);
+                department.viewMySQL();
                 doWhat();
                 break;
             case "Exit":
             default:
                 connection.end();
+                break;
         }
     });
 };
