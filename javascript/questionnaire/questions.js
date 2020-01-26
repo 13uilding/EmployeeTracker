@@ -13,13 +13,15 @@ const testingEmp = doArr.splice(0, 7);
 
 module.exports = {
     // What would you like to do Questionnaire
-    doWhat: inquirer.prompt({
+    doWhat: () => {inquirer.prompt({
         name: "do",
         message: "What would you like to do?",
         type: "list",
         choices: testingDep
     }).then(answers => {
         console.log(answers);
-    }),
+        return answers
+    })
+    },
     
 };
