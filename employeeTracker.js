@@ -44,7 +44,7 @@ function doWhat() {
     }).then(async function(answers) {
         switch (answers.do) {
             case "Add Department":
-                let name = await departmentInquirer();
+                name = await departmentInquirer();
                 department = new Department(connection, name);
                 department.addMySQL();
                 doWhat();
@@ -54,11 +54,16 @@ function doWhat() {
                 department.viewMySQL();
                 doWhat();
                 break;
+            case "Remove Department":
+                department = new Department(connection);
+                department.removeMySQL(doWhat);
+                break;
             case "Exit":
             default:
                 connection.end();
                 break;
         }
+
     });
 };
 
