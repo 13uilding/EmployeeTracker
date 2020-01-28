@@ -6,7 +6,6 @@ const Department = require("./javascript/classes/department");
 // const Update = require("./javascript/classes/update");
 const inquirer = require("inquirer");
 
-
 const doQs = [
     "View All Employees", "View Employees By Department", "View Employees by Manager",
     "Add Employee", "Remove Employee", "Update Employee Role", "Update Employee Manager",
@@ -41,21 +40,17 @@ function doWhat() {
         message: "What would you like to do?",
         type: "list",
         choices: testingDep
-    }).then(async function(answers) {
+    }).then(function(answers) {
+        let department = new Department(connection);
         switch (answers.do) {
             case "Add Department":
-                name = await departmentInquirer();
-                department = new Department(connection, name);
-                department.addMySQL();
-                doWhat();
+                department.addMySQL(doWhat);
                 break;
             case "View All Departments":
-                department = new Department(connection);
                 department.viewMySQL();
                 doWhat();
                 break;
             case "Remove Department":
-                department = new Department(connection);
                 department.removeMySQL(doWhat);
                 break;
             case "Exit":
@@ -67,17 +62,6 @@ function doWhat() {
     });
 };
 
-const departmentInquirer = () => {
-    return new Promise(resolve => {
-        inquirer.prompt({
-            name: "department",
-            message: "What is the department name?"
-        }).then(({department}) => {
-            // console.log(`Here's your answers: ${department}`);
-            resolve(department);
-        })
-    });
-};
 
 
 
