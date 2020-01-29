@@ -70,3 +70,43 @@ function getTables() {
         })
     })
 }
+
+function choicesArr(database, type) {
+    var choices = [];
+    switch (database) {
+        case "departments":
+            for (const department of departments) {
+                if (type === "name") {
+                    choices.push((department.name).toLowerCase());
+                } else {
+                    choices.push(department.id);
+                }
+            };
+            break;
+        case "roles":
+            for (const role of roles) {
+                if (type === "name") {
+                    choices.push((role.title).toLowerCase());
+                } else if (type === "id") {
+                    choices.push(role.id);
+                } else {
+                    choices.push(role.salary);
+                }
+            };
+            break;
+        case "employees":
+            for (const employee of employees) {
+                if (type === "name") {
+                    let pushy = (employee.first_name).toLowerCase()
+                    pushy += " " + (employee.last_name).toLowerCase()
+                    choices.push(pushy);
+                } else if (type === "id") {
+                    choices.push(employee.id);
+                }
+            };
+            break;
+        default:
+            return
+    }
+    return choices
+}

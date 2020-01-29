@@ -31,7 +31,8 @@ const doQs = [
     ];
 
 
-const testingDep = doQs.splice(7, 12);
+const testingDep = doQs.splice(0, 7);
+testingDep[7] = "Exit"
 // const testingRoles = doQs.splice(7, 12);
 // const testingEmp = doQs.splice(0, 7);
 
@@ -78,10 +79,18 @@ async function doWhat() {
                 });
                 break;
             case "View All Employees":
+                employeesTable = await getEmployeesTables("employees.id");
+                console.table(employeesTable);
+                doWhat();
                 break;
             case "View Employees By Department":
+                employeesTable = await getEmployeesTables("name");
+                console.table(employeesTable);
+                doWhat();
                 break;
             case "View Employees by Manager":
+                console.log("Haven't added this functionality yet.")
+                doWhat();
                 break;
             case "Add Employee":
                 inquirer.prompt([{
@@ -96,21 +105,30 @@ async function doWhat() {
                     name: "role",
                     message: "What is their role?",
                     type: "list",
-                    choices: choicesArr("name", database, roles)
+                    choices: choicesArr("name", "roles", roles)
                 }, {
                     name: "manager",
                     message: "Who is their manager?",
                     type: "list",
                     choices: choicesArr("name", database, employees)
                 }]).then(function(answers) {
+                    let matchRole = roles.find(role => role.title.toLowerCase() === answers.role.toLowerCase());
+                    answers.role_id = matchRole.id;
+                    let matchManager = employees.find(employee => ((employee.first_name.toLowerCase() + " " + employee.last_name.toLowerCase()) === answers.manager.toLowerCase()));
+                    answers.manager_id = matchManager.id;
+                    delete answers.role;
+                    delete answers.manager;
                     elementAdd(answers, database)
                 });
                 break;
             case "Remove Employee":
+                
                 break;
             case "Update Employee Role":
                 break;
             case "Update Employee Manager":
+                console.log("Haven't added this functionality yet.")
+                doWhat();
                 break;
             case "View All Roles":
                 console.table(roles);
@@ -153,6 +171,8 @@ async function doWhat() {
                 });
                 break;
             case "Update Role Department":
+                console.log("Haven't added this functionality yet.")
+                doWhat();
                 break;
             case "Exit":
             default:
@@ -227,6 +247,20 @@ function getRolesTables() {
         })
     })
 }
+function getEmployeesTables(order) {
+    return new Promise((resolve, reject) => {
+        let query = 
+`SELECT employees.id, first_name, last_name, title, name, salary, manager_id
+FROM employees
+INNER JOIN roles ON role_id = roles.id
+INNER JOIN departments ON departments.id = roles.department_id
+ORDER BY ${order} ASC;`;
+        connection.query(query, function(err, res) {
+            if (err) throw err;
+            resolve(res);
+        })
+    })
+}
 
 // Generates choices array for remove and ids (not great for manager)
 function choicesArr(type, database, databaseArr) {
@@ -253,10 +287,11 @@ function choicesArr(type, database, databaseArr) {
             };
             break;
         case "employees":
+            console.log(databaseArr);
             for (const employee of databaseArr) {
                 if (type === "name") {
-                    let pushy = (employee.first_name).toLowerCase()
-                    pushy += " " + (employee.last_name).toLowerCase()
+                    let pushy = employee.first_name.toLowerCase()
+                    pushy += " " + employee.last_name.toLowerCase()
                     choices.push(pushy);
                 } else if (type === "id") {
                     choices.push(employee.id);
