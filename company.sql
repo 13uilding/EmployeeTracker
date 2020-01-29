@@ -1,21 +1,16 @@
 DROP DATABASE IF EXISTS company_db;
 CREATE DATABASE company_db;
-
 USE company_db;
-
 CREATE TABLE departments(
 	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY
     , name VARCHAR(30) NOT NULL
 );
-
-
 CREATE TABLE roles(
 	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY
     , title VARCHAR(30) NOT NULL
     , salary DECIMAL NOT NULL
     , department_id INT NOT NULL
 );
-
 CREATE TABLE employees(
 	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY
     , first_name VARCHAR(30) NOT NULL
@@ -23,7 +18,6 @@ CREATE TABLE employees(
     , role_id INT NOT NULL
     , manager_id INT
 );
-
 INSERT INTO departments (name)
 VALUES ("Production"), ("R&D"), ("Purchasing"), ("Marketing"), ("HR"), ("Accounting and Finance");
 INSERT INTO roles (title, salary, department_id)
@@ -49,8 +43,21 @@ SELECT * FROM departments;
 SELECT * FROM roles;
 SELECT * FROM employees;
 
+UPDATE employees SET role_id = 6 WHERE id = 2;
 
-SELECT t1.department_id, t2.name, title, salary
+SELECT first_name, last_name, title
+FROM employees
+INNER JOIN roles ON role_id = roles.id
+WHERE title = "Manager"
+ORDER BY first_name ASC;
+
+SELECT employees.id, first_name, last_name, title, name, salary, manager_id
+FROM employees
+INNER JOIN roles ON role_id = roles.id
+INNER JOIN departments ON departments.id = roles.department_id
+ORDER BY name ASC;
+
+SELECT t2.name, title, salary
 FROM roles as t1
 INNER JOIN departments as t2 ON t1.department_id = t2.id
-ORDER BY department_id DESC;
+ORDER BY t2.name;
