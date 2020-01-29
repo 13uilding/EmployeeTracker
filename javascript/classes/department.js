@@ -7,7 +7,7 @@ class Department {
         this.name = name;
         this.connection = connection;
     };
-    addMySQL(escape) {
+    initAdd(escape) {
         let innerConnection = this.connection;
         innerConnection.query("SELECT * FROM departments", function(err, res) {
             if (err) throw err;
@@ -82,6 +82,7 @@ class Department {
     }
 
 }
+
 
 
 
