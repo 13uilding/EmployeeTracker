@@ -122,6 +122,25 @@ async function doWhat() {
                 doWhat();
                 break;
             case "Add Role":
+                inquirer.prompt([{
+                    name: "title",
+                    message: "What is the role's title?",
+                    type: "input"           
+                }, {
+                    name: "salary",
+                    message: "What is the role's salary?",
+                    type: "input",
+                }, {
+                    name: "department_name",
+                    message: "Which department does this role belong to?",
+                    type: "list",
+                    choices: choicesArr("name", "departments", departments)
+                }]).then(function(answers) {
+                    let match = departments.find(department => department.name.toLowerCase() === answers.department_name);
+                    delete answers.department_name;
+                    answers.department_id = match.id;
+                    elementAdd(answers, database)
+                });
                 break;
             case "Remove Role":
                 break;
@@ -135,7 +154,7 @@ async function doWhat() {
 
     });
             
-} catch {err}
+} catch(err) {if (err) throw err;}
 };
 
 async function init() {
