@@ -33,20 +33,21 @@ SELECT * FROM departments;
 SELECT * FROM roles;
 SELECT * FROM employees;
 
-
+UPDATE employees SET role_id = 6 WHERE id = 2;
 
 SELECT first_name, last_name, title
 FROM employees
 INNER JOIN roles ON role_id = roles.id
-ORDER BY first_name ASC
-WHERE title = "Manager";
-
-SELECT t.id, first_name, last_name, title, manager_id
-FROM employees as t
-INNER JOIN roles ON role_id = roles.id
+WHERE title = "Manager"
 ORDER BY first_name ASC;
 
-SELECT t1.department_id, t2.name, title, salary
+SELECT employees.id, first_name, last_name, title, name, salary, manager_id
+FROM employees
+INNER JOIN roles ON role_id = roles.id
+INNER JOIN departments ON departments.id = roles.department_id
+ORDER BY name ASC;
+
+SELECT t2.name, title, salary
 FROM roles as t1
 INNER JOIN departments as t2 ON t1.department_id = t2.id
-ORDER BY department_id DESC;
+ORDER BY t2.name;

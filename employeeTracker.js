@@ -132,6 +132,26 @@ async function doWhat() {
                 });
                 break;
             case "Update Employee Role":
+                inquirer.prompt([
+                    {
+                    name: "name",
+                    message: "Which employee would you like to update?",
+                    type: "list",
+                    choices: choicesArr("name", "employees", employees)
+                }, {
+                    name: "role",
+                    message: "What is their new role?",
+                    type: "list",
+                    choices: choicesArr("name", "roles", roles)
+                }
+                ]).then(function(answers) {
+                    let matchName = employees.find(employee => answers.name === `${employee.first_name.toLowerCase()} ${employee.last_name.toLowerCase()}`)
+                    let id = matchName.id;
+                    let matchRole = roles.find(role => answers.role.toLowerCase() === role.title.toLowerCase())
+                    let updatedRoleId = matchRole.id;
+                    let obj = {id: id, updatedRoleId: updatedRoleId};
+                    elementUpdate(obj, "employees")
+                });
                 break;
             case "Update Employee Manager":
                 console.log("Haven't added this functionality yet.")
@@ -205,8 +225,19 @@ function elementAdd(obj, database) {
         connection.query(query, obj, function(err, res) {
             if (err) throw err;
             return doWhat();
+        })  
+    })
+}
+function elementUpdate(obj, database) {
+    return new Promise((resolve, reject) => {
+        const query = 
+`UPDATE ${database}
+SET role_id = ${obj.updatedRoleId}
+WHERE id = ${obj.id}`
+        connection.query(query, function(err, res) {
+            if (err) throw err;
+            return doWhat();
         })
-        
     })
 }
 
