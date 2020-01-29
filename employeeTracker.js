@@ -143,6 +143,14 @@ async function doWhat() {
                 });
                 break;
             case "Remove Role":
+                inquirer.prompt({
+                    name: "remove",
+                    message: "Which role would you like to remove?",
+                    type: "list",
+                    choices: choicesArr("name", database, roles)
+                }).then(function(answers) {
+                    elementRemove(answers, database, roles);
+                });
                 break;
             case "Update Role Department":
                 break;
