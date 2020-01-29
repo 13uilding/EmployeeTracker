@@ -25,15 +25,6 @@ const doQs = [
     "Update Role Department", "View All Departments", "Add Department",
     "Remove Department", "Exit"
     ];
-
-
-const testingDep = doQs.splice(0, 7);
-testingDep[7] = "Exit"
-// const testingRoles = doQs.splice(7, 12);
-// const testingEmp = doQs.splice(0, 7);
-
-
-
     // What would you like to do Questionnaire
 async function doWhat() {
     try{
@@ -42,7 +33,7 @@ async function doWhat() {
         name: "do",
         message: "What would you like to do?",
         type: "list",
-        choices: testingDep
+        choices: doQs
     }).then(async function(answers) {
         console.log(answers.do);
         let answersArr = answers.do.split(" ")
