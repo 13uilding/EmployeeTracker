@@ -31,7 +31,7 @@ const doQs = [
     ];
 
 
-const testingDep = doQs.splice(12);
+const testingDep = doQs.splice(7, 12);
 // const testingRoles = doQs.splice(7, 12);
 // const testingEmp = doQs.splice(0, 7);
 
@@ -113,8 +113,13 @@ async function doWhat() {
             case "Update Employee Manager":
                 break;
             case "View All Roles":
+                console.table(roles);
+                doWhat();
                 break;
             case "View Roles By Department":
+                let rolesTable = await getRolesTables();
+                console.table(rolesTable);
+                doWhat();
                 break;
             case "Add Role":
                 break;
@@ -177,6 +182,18 @@ function getTables() {
         query += "SELECT * FROM departments";
         query += ";SELECT * FROM roles";
         query += ";SELECT * FROM employees"
+        connection.query(query, function(err, res) {
+            if (err) throw err;
+            resolve(res);
+        })
+    })
+}
+function getRolesTables() {
+    return new Promise((resolve, reject) => {
+        let query = `SELECT t2.name, title, salary
+        FROM roles as t1
+        INNER JOIN departments as t2 ON t1.department_id = t2.id
+        ORDER BY t2.name;`;
         connection.query(query, function(err, res) {
             if (err) throw err;
             resolve(res);
