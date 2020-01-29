@@ -1,6 +1,6 @@
 const mysql = require("mysql");
 // const questions = require("./javascript/questionnaire/questions");
-const Department = require("./javascript/classes/department");
+const cTable = require("console.table");
 // const Remove = require("./javascript/classes/remove");
 // const View = require("./javascript/classes/view");
 // const Update = require("./javascript/classes/update");
@@ -47,7 +47,6 @@ async function doWhat() {
         type: "list",
         choices: testingDep
     }).then(async function(answers) {
-        let department = new Department(connection);
         console.log(answers.do);
         let answersArr = answers.do.split(" ")
         let database = answersArr[answersArr.length - 1].toLowerCase();
@@ -65,7 +64,7 @@ async function doWhat() {
                 })
                 break;
             case "View All Departments":
-                department.viewMySQL();
+                console.table(departments);
                 doWhat();
                 break;
             case "Remove Department":
