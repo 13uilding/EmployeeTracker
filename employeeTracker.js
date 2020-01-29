@@ -1,9 +1,5 @@
 const mysql = require("mysql");
-// const questions = require("./javascript/questionnaire/questions");
 const cTable = require("console.table");
-// const Remove = require("./javascript/classes/remove");
-// const View = require("./javascript/classes/view");
-// const Update = require("./javascript/classes/update");
 const inquirer = require("inquirer");
 
 var connection = mysql.createConnection({
