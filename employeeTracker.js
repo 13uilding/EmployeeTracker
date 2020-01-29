@@ -122,7 +122,14 @@ async function doWhat() {
                 });
                 break;
             case "Remove Employee":
-                
+                inquirer.prompt({
+                    name: "remove",
+                    message: "Which employee would you like to remove?",
+                    type: "list",
+                    choices: choicesArr("name", database, employees)
+                }).then(function(answers) {
+                    elementRemove(answers, database, employees);
+                });
                 break;
             case "Update Employee Role":
                 break;
@@ -212,10 +219,9 @@ function elementRemove(obj, database, databaseArr) {
     } else if (database === "roles") {
         var match = databaseArr.find(role => obj.remove === role.title)
     } else {
-        var match = databaseArr.find(employee => obj.remove === `${employee.first_name} ${employee.last_name}`)
+        var match = databaseArr.find(employee => obj.remove === `${employee.first_name.toLowerCase()} ${employee.last_name.toLowerCase()}`)
     }
         let id = match.id;
-        console.log(id);
         connection.query(`DELETE FROM ${database} WHERE ?`, {id: id}, function(err, res) {
             if (err) throw err;
             return doWhat();
@@ -287,7 +293,6 @@ function choicesArr(type, database, databaseArr) {
             };
             break;
         case "employees":
-            console.log(databaseArr);
             for (const employee of databaseArr) {
                 if (type === "name") {
                     let pushy = employee.first_name.toLowerCase()
